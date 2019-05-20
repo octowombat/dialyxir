@@ -8,12 +8,24 @@ defmodule Dialyxir.Warnings.CallbackArgumentTypeMismatch do
   @impl Dialyxir.Warning
   @spec format_short([String.t()]) :: String.t()
   def format_short([behaviour, function, arity, position, _success_type, _callback_type]) do
-    pretty_behaviour = Erlex.pretty_print(behaviour)
+    pretty_behaviour = behaviour |> Erlex.pretty_print() |> unqualify_module()
     ordinal_position = Dialyxir.WarningHelpers.ordinal(position)
 
     "Type mismatch with behaviour callback #{pretty_behaviour}.#{function}/#{arity} in the #{
       ordinal_position
     } argument."
+  end
+
+  defp unqualify_module(name) when is_binary(name) do
+    case String.split(name, ".") do
+      [only] ->
+        only
+
+      multiple ->
+        multiple
+        |> Enum.take(-1)
+        |> Enum.join(".")
+    end
   end
 
   @impl Dialyxir.Warning
