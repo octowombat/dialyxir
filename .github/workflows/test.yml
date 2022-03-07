@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ ignore_warnings_file_otp24, master ]
   pull_request:
-    branches: [ master ]
+    branches: [ ignore_warnings_file_otp24, master ]
 
 jobs:
   check_duplicate_runs:
